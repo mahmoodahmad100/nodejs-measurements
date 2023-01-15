@@ -45,7 +45,8 @@
           url: 'auth/login',
           data: $(this).serialize(),
           success: function(res) {
-            window.location.href = '/';
+            let data = res.data;
+            window.location.href = `/setup?muid=${data.muid}&start=${data.start}&stop=${data.stop}&measurement=${data.measurement}&limit=${data.limit}`;
           },
           error: function(res) {
             let errors = res.responseJSON.errors;
