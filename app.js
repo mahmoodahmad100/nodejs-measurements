@@ -96,7 +96,8 @@ app.post('/measurements', async (req, res) => {
       Cookie: `_db_sess=${req.cookies._db_sess};`
     }
   })
-  .then(function (response) {
+  .then(async function (response) {
+    await Measurement.remove({}); // to make sure that, there is  no duplicate data
     Measurement.create(response.data.data);
     console.log(response);
     res.status(200).json({message: 'Success.', data: response.data.data});
@@ -108,8 +109,9 @@ app.post('/measurements', async (req, res) => {
 });
 
 app.get('/measurements', async (req, res) => {
-  let data = await Measurement.find({});
-  res.status(200).json(data);
+  console.log(req.query);
+  let data = await Measurement.find({ timestamp: { $gte: req.query.start, $lt: req.query.stop } });
+  res.status(200).json({ data: data });
 });
 
 app.listen(80);
