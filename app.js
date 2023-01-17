@@ -39,7 +39,7 @@ app.use(cookieParser(), function(req, res, next) {
   }
 });
 
-app.get('/', async function(req, res){
+app.get('/', function(req, res){
   res.sendFile(path.join(__dirname + '/pages/home.html'));
 });
 
