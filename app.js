@@ -4,8 +4,28 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const axios = require('axios');
 const querystring = require('querystring');
+const mongoose = require('mongoose');
 const app = express();
 const ENV = process.env.ENV;
+const Measurement = require('./models/measurement');
+
+// DB credentials
+let username    = process.env.MONGO_INITDB_ROOT_USERNAME;
+let password    = process.env.MONGO_INITDB_ROOT_PASSWORD;
+let service     = process.env.MONGO_SERVICE;
+let port        = process.env.MONGO_PORT;
+let mongoString = `mongodb://${username}:${password}@${service}:${port}/measurements?authSource=admin`;
+
+mongoose.connect(mongoString);
+const database = mongoose.connection;
+
+database.on('error', (error) => {
+  console.log(error)
+});
+
+database.once('connected', () => {
+  console.log('Database Connected');
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,15 +39,15 @@ app.use(cookieParser(), function(req, res, next) {
   }
 });
 
-app.get('/', function(req,res){
+app.get('/', async function(req, res){
   res.sendFile(path.join(__dirname + '/pages/home.html'));
 });
 
-app.get('/setup', function(req,res){
+app.get('/setup', function(req, res){
   res.sendFile(path.join(__dirname + '/pages/setup.html'));
 });
 
-app.get('/login', function(req,res){
+app.get('/login', function(req, res){
   if (ENV == 'dev' && (!req.query.email || !req.query.password)) {
     let email = encodeURIComponent(process.env.EMAIL);
     let password = encodeURIComponent(process.env.PASSWORD);
@@ -77,7 +97,7 @@ app.post('/measurements', async (req, res) => {
     }
   })
   .then(function (response) {
-    // insert into db
+    Measurement.create(response.data.data);
     console.log(response);
     res.status(200).json({message: 'Success.', data: response.data.data});
   })
@@ -85,6 +105,11 @@ app.post('/measurements', async (req, res) => {
     console.log(error);
     res.status(error.response.status).json(error.response.data);
   });
+});
+
+app.get('/measurements', async (req, res) => {
+  let data = await Measurement.find({});
+  res.status(200).json(data);
 });
 
 app.listen(80);
