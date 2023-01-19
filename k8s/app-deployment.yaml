@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-measurements-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-measurements-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-measurements-app
+    spec:
+      containers:
+        - name: nodejs-measurements-app
+          image: mahmoodahmad100/nodejs-measurements:v1.0
+          envFrom:
+            - configMapRef:
+                name: nodejs-measurements-config
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"

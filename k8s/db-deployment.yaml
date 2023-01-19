@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-measurements-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-measurements-db
+  template:
+    metadata:
+      labels:
+        app: nodejs-measurements-db
+    spec:
+      containers:
+        - name: nodejs-measurements-db
+          image: mongo
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: nodejs-measurements-config
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: nodejs-measurements-config
+                  key: MONGO_INITDB_ROOT_PASSWORD
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
+          volumeMounts:
+          - mountPath: /data/db
+            name: nodejs-measurements-db-vol
+      volumes:
+        - name: nodejs-measurements-db-vol
+          persistentVolumeClaim:
+            claimName: nodejs-measurements-pvc

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nodejs-measurements-config
+data:
+  ENV: dev
+  API_BASE_URL: https://example.com/api/v1
+  EMAIL: test@example.com
+  PASSWORD: '12345'
+  MUID: ''
+  START: 2022-04-01T00:00:00Z
+  STOP: 2022-05-01T00:00:00Z
+  MEASUREMENT: energy
+  LIMIT: '1000'
+  MONGO_INITDB_ROOT_USERNAME: root
+  MONGO_INITDB_ROOT_PASSWORD: '123456'
+  MONGO_SERVICE: nodejs-measurements-db-service
+  MONGO_PORT: '27017'
