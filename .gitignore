@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 data/
 config.yaml
+.scannerwork/
+sonar-project.properties
