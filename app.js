@@ -27,6 +27,8 @@ database.once('connected', () => {
   console.log('Database Connected');
 });
 
+app.disable('x-powered-by');
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -49,9 +51,9 @@ app.get('/setup', function(req, res){
 
 app.get('/login', function(req, res){
   if (ENV == 'dev' && (!req.query.email || !req.query.password)) {
-    let email = encodeURIComponent(process.env.EMAIL);
-    let password = encodeURIComponent(process.env.PASSWORD);
-    res.redirect(`/login?email=${email}&password=${password}`);
+    let auth_email = encodeURIComponent(process.env.EMAIL);
+    let auth_password = encodeURIComponent(process.env.PASSWORD);
+    res.redirect(`/login?email=${auth_email}&password=${auth_password}`);
   }
 
   res.sendFile(path.join(__dirname + '/pages/login.html'));
@@ -60,8 +62,8 @@ app.get('/login', function(req, res){
 app.post('/auth/login', async (req, res) => {
   await axios.post(`${process.env.API_BASE_URL}/auth/auth`, req.body)
   .then(function (response) {
-    for (let i = 0; i < response.headers['set-cookie'].length; i++) {
-      let _db_sess_cookie = response.headers['set-cookie'][i].match(/_db_sess=\s*([^;]*)/gi);
+    for (let current_cookie of response.headers['set-cookie']) {
+      let _db_sess_cookie = current_cookie.match(/_db_sess=\s*([^;]*)/gi);
       if (_db_sess_cookie) {
         res.cookie(
           '_db_sess',
