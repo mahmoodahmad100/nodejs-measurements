@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nodejs-measurements-app
-          image: mahmoodahmad100/nodejs-measurements:v1.0
+          image: mahmoodahmad100/nodejs-measurements:v1.1
           envFrom:
             - configMapRef:
                 name: nodejs-measurements-config
