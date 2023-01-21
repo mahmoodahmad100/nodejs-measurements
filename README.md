@@ -47,7 +47,7 @@ Please note that `LIMIT` in the configuration files is used to limit the number 
 
 ### (1) Kubernetes:
 
-* copy `config.yaml.example` and rename the copied file to `config.yaml` and change all the details from that file
+* copy `k8s/config.yaml.example` and rename the copied file to `config.yaml` and change all the details from that file
 
 **Usage:**
 
