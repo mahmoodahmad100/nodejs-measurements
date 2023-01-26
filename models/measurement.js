@@ -6,7 +6,7 @@ const MeasurementSchema = new mongoose.Schema({
         required: true
     },
     timestamp: {
-        type: String,
+        type: Date,
         required: true
     },
     tags: {
@@ -14,24 +14,10 @@ const MeasurementSchema = new mongoose.Schema({
         quality:  String
     },
     '0100011D00FF': {
-        type: Number,
-        default: function() {
-            let value = this['0100011D00FF'];
-            if (typeof value == 'object' || value == null || !value) {
-              return 0;
-            }
-            return value;
-        }
+        type: Number
     },
     '0100021D00FF': {
-        type: Number,
-        default: function() {
-            let value = this['0100021D00FF'];
-            if (typeof value == 'object' || value == null || !value) {
-                return 0;
-            }
-            return value;
-        }
+        type: Number
     }
 });
 

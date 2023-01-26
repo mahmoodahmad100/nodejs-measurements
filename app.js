@@ -112,7 +112,14 @@ app.post('/measurements', async (req, res) => {
 
 app.get('/measurements', async (req, res) => {
   console.log(req.query);
-  let data = await Measurement.find({ timestamp: { $gte: req.query.start, $lt: req.query.stop } });
+  console.log('new Date(req.query.start)', new Date(req.query.start));
+  let data = await Measurement.find({
+    // timestamp: { 
+    //   $gte: new Date(req.query.start),
+    //   $lt: new Date(req.query.stop)
+    // } 
+  }).sort({ timestamp: -1 });
+
   res.status(200).json({ data: data });
 });
 
